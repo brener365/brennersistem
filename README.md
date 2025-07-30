@@ -1,1 +1,762 @@
-# Relat-rio-de-carregamento-
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Carregamento e Relatórios</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary: #10b981;
+      --dark-bg: #0f172a;
+      --dark-card: #1e293b;
+      --light-text: #f1f5f9;
+      --border: #334155;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+      --silo-color: #3b82f6;
+      --armazem-color: #f59e0b;
+      --info-color: #8b5cf6;
+      --report-color: #8b5cf6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--dark-bg) 0%, #020617 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--light-text);
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-content {
+      flex: 1;
+    }
+
+    header h1 {
+      font-size: 2.8rem;
+      margin-bottom: 15px;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      display: inline-block;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    header p {
+      color: #94a3b8;
+      max-width: 600px;
+      margin: 0 auto;
+      font-size: 1.1rem;
+    }
+
+    .system-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+    }
+
+    .card {
+      background: var(--dark-card);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--border);
+      transition: transform 0.3s ease;
+      flex: 1;
+      min-width: 320px;
+      max-width: 500px;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .app-header {
+      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+      padding: 25px;
+      text-align: center;
+      position: relative;
+    }
+
+    .app-header h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .app-header p {
+      opacity: 0.9;
+      font-size: 0.9rem;
+    }
+
+    .app-header::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 20px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%231e293b' fill-opacity='1' d='M0,128L48,128C96,128,192,128,288,117.3C384,107,480,85,576,90.7C672,96,768,128,864,138.7C960,149,1056,139,1152,117.3C1248,96,1344,64,1392,48L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+      background-size: 100% 100%;
+    }
+
+    .form-container {
+      padding: 25px;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-group label i {
+      margin-right: 10px;
+      color: var(--primary);
+    }
+
+    input, select {
+      width: 100%;
+      padding: 14px 16px 14px 46px;
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--light-text);
+      font-family: inherit;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 16px;
+      top: 42px;
+      color: #94a3b8;
+    }
+
+    .location-options {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .location-option {
+      flex: 1;
+      text-align: center;
+      padding: 15px;
+      border-radius: 10px;
+      background: rgba(30, 41, 59, 0.5);
+      border: 2px solid var(--border);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .location-option.active {
+      border-color: var(--primary);
+      background: rgba(37, 99, 235, 0.1);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .location-option.silo.active {
+      border-color: var(--silo-color);
+      background: rgba(59, 130, 246, 0.1);
+    }
+
+    .location-option.armazem.active {
+      border-color: var(--armazem-color);
+      background: rgba(245, 158, 11, 0.1);
+    }
+
+    .location-option i {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .location-option.silo i {
+      color: var(--silo-color);
+    }
+
+    .location-option.armazem i {
+      color: var(--armazem-color);
+    }
+
+    .btns {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 25px;
+      gap: 12px;
+    }
+
+    button {
+      padding: 14px 20px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      flex: 1;
+    }
+
+    .btn-send {
+      background: linear-gradient(90deg, var(--secondary) 0%, #059669 100%);
+      color: white;
+    }
+
+    .btn-send:hover {
+      background: linear-gradient(90deg, #059669 0%, #047857 100%);
+      transform: translateY(-2px);
+    }
+
+    .btn-copy {
+      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+    }
+
+    .btn-copy:hover {
+      background: linear-gradient(90deg, var(--primary-dark) 0%, #1e40af 100%);
+      transform: translateY(-2px);
+    }
+
+    .btn-whatsapp {
+      background: linear-gradient(90deg, #25D366 0%, #128C7E 100%);
+      color: white;
+    }
+
+    .btn-whatsapp:hover {
+      background: linear-gradient(90deg, #128C7E 0%, #075E54 100%);
+      transform: translateY(-2px);
+    }
+
+    .btn-clear {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--error);
+      border: 1px solid var(--error);
+      margin-top: 15px;
+      width: 100%;
+    }
+
+    .btn-clear:hover {
+      background: rgba(239, 68, 68, 0.25);
+    }
+
+    .btn-report {
+      background: linear-gradient(90deg, var(--report-color) 0%, #7c3aed 100%);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: 20px;
+    }
+
+    .btn-report:hover {
+      background: linear-gradient(90deg, #7c3aed 0%, #6d28d9 100%);
+      transform: translateY(-2px);
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px 20px;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-top: 20px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--dark-card);
+      color: white;
+      padding: 16px 25px;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 1000;
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast i {
+      font-size: 1.3rem;
+    }
+
+    .toast.success {
+      border-left: 4px solid var(--success);
+    }
+
+    .toast.success i {
+      color: var(--success);
+    }
+
+    .toast.error {
+      border-left: 4px solid var(--error);
+    }
+
+    .toast.error i {
+      color: var(--error);
+    }
+
+    .toast.info {
+      border-left: 4px solid var(--info-color);
+    }
+
+    .toast.info i {
+      color: var(--info-color);
+    }
+
+    .info-panel {
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 16px;
+      padding: 25px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .info-panel h3 {
+      font-size: 1.4rem;
+      margin-bottom: 15px;
+      color: var(--primary);
+    }
+
+    .transportadoras-list {
+      background: rgba(30, 41, 59, 0.3);
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .transportadoras-list h4 {
+      margin-bottom: 10px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .transportadoras-list ul {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+      padding-left: 20px;
+    }
+
+    .transportadoras-list li {
+      padding: 5px 0;
+      color: #cbd5e1;
+      font-size: 0.9rem;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background: var(--dark-card);
+      width: 90%;
+      max-width: 800px;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      transform: translateY(30px);
+      transition: transform 0.4s ease;
+    }
+
+    .modal.show .modal-content {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      background: linear-gradient(90deg, var(--report-color) 0%, #7c3aed 100%);
+      padding: 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .modal-header h3 {
+      font-size: 1.8rem;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+    }
+
+    .modal-body {
+      padding: 30px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .report-container {
+      background: rgba(30, 41, 59, 0.3);
+      border-radius: 12px;
+      padding: 25px;
+      font-family: 'Courier New', monospace;
+      white-space: pre-wrap;
+      line-height: 1.8;
+      border: 1px solid var(--border);
+    }
+
+    .report-title {
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+      color: var(--report-color);
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .report-section {
+      margin: 25px 0;
+      padding-left: 20px;
+      border-left: 3px solid var(--success);
+    }
+
+    .report-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+      color: var(--success);
+      font-weight: bold;
+    }
+
+    .report-item {
+      margin-left: 20px;
+      padding: 5px 0;
+      color: #cbd5e1;
+    }
+
+    .report-total {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px dashed var(--border);
+      font-weight: bold;
+      color: var(--warning);
+    }
+
+    .report-grand-total {
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 2px solid var(--primary);
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--primary);
+      text-align: center;
+    }
+
+    .turno-selector {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 25px;
+      justify-content: center;
+    }
+
+    .turno-btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      background: rgba(30, 41, 59, 0.5);
+      border: 2px solid var(--border);
+      color: var(--light-text);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .turno-btn.active {
+      background: rgba(139, 92, 246, 0.2);
+      border-color: var(--report-color);
+      color: var(--report-color);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      .system-container {
+        flex-direction: column;
+      }
+      
+      .btns {
+        flex-direction: column;
+      }
+      
+      .app-header h2 {
+        font-size: 1.5rem;
+      }
+      
+      .location-options {
+        flex-direction: column;
+      }
+      
+      header h1 {
+        font-size: 2.2rem;
+      }
+      
+      header {
+        flex-direction: column;
+        gap: 20px;
+      }
+      
+      .btn-report {
+        margin-left: 0;
+        margin-top: 15px;
+        width: 100%;
+      }
+      
+      .turno-selector {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-content">
+        <h1><i class="fas fa-truck-loading"></i> Sistema de Carregamento</h1>
+        <p>Registro de carregamentos e geração de relatórios</p>
+      </div>
+      <button class="btn-report" id="btnReport">
+        <i class="fas fa-file-alt"></i> Gerar Relatório
+      </button>
+    </header>
+    
+    <div class="info-panel">
+      <h3><i class="fas fa-list-check"></i> Transportadoras Disponíveis</h3>
+      <div class="transportadoras-list">
+        <h4><i class="fas fa-truck"></i> Lista de Transportadoras:</h4>
+        <ul>
+          <li>SOTRAN S/A LOGÍSTICA E TRANSPORTE</li>
+          <li>SUGAR EXPRESS S/A</li>
+          <li>TRANSPORTES VELOZ</li>
+          <li>LOGÍSTICA BRASIL</li>
+          <li>TRANSPORTADORA GUARDIA -GAMA LOGÍSTICA LTDA</li>
+          <li>COPERSUCAR S.A</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="system-container">
+      <div class="card">
+        <div class="app-header">
+          <h2><i class="fas fa-truck-loading"></i> Registro de Carregamento</h2>
+          <p>Preencha os dados do carregamento para registrar</p>
+        </div>
+        
+        <div class="form-container">
+          <div class="location-options">
+            <div class="location-option silo active" data-location="silo">
+              <i class="fas fa-industry"></i>
+              <h3>Silo (Produção)</h3>
+              <p>Carregamento direto</p>
+            </div>
+            <div class="location-option armazem" data-location="armazem">
+              <i class="fas fa-warehouse"></i>
+              <h3>Armazém</h3>
+              <p>Carregamento indireto</p>
+            </div>
+          </div>
+          
+          <div class="input-group">
+            <label for="cliente"><i class="fas fa-building"></i> Transportadora:</label>
+            <select id="cliente">
+              <option value="">Selecione uma transportadora</option>
+              <option value="SOTRAN S/A LOGÍSTICA E TRANSPORTE">SOTRAN S/A LOGÍSTICA E TRANSPORTE</option>
+              <option value="SUGAR EXPRESS S/A">SUGAR EXPRESS S/A</option>
+              <option value="TRANSPORTES VELOZ">TRANSPORTES VELOZ</option>
+              <option value="LOGÍSTICA BRASIL">LOGÍSTICA BRASIL</option>
+              <option value="TRANSPORTADORA GUARDIA -GAMA LOGÍSTICA LTDA">TRANSPORTADORA GUARDIA -GAMA LOGÍSTICA LTDA</option>
+              <option value="COPERSUCAR S.A">COPERSUCAR S.A</option>
+            </select>
+          </div>
+          
+          <div class="input-group">
+            <label for="turno"><i class="fas fa-clock"></i> Turno:</label>
+            <select id="turno">
+              <option value="">Selecione o turno</option>
+              <option value="TURNO A">TURNO A</option>
+              <option value="TURNO B">TURNO B</option>
+              <option value="TURNO C">TURNO C</option>
+            </select>
+          </div>
+          
+          <div class="input-group">
+            <label for="ordem"><i class="fas fa-file-alt"></i> Ordem de Carregamento:</label>
+            <i class="fas fa-hashtag input-icon"></i>
+            <input id="ordem" placeholder="Número da ordem" />
+          </div>
+          
+          <div class="input-group">
+            <label for="motorista"><i class="fas fa-user"></i> Motorista:</label>
+            <i class="fas fa-id-card input-icon"></i>
+            <input id="motorista" placeholder="Nome do motorista" />
+          </div>
+          
+          <div class="input-group">
+            <label for="placa"><i class="fas fa-car"></i> Placa do Veículo:</label>
+            <i class="fas fa-truck input-icon"></i>
+            <input id="placa" placeholder="Placa do caminhão" />
+          </div>
+          
+          <div class="input-group">
+            <label for="peso"><i class="fas fa-weight-hanging"></i> Peso (kg):</label>
+            <i class="fas fa-balance-scale input-icon"></i>
+            <input id="peso" placeholder="Peso em quilogramas" type="number" />
+          </div>
+          
+          <div class="btns">
+            <button class="btn-send" id="btnSend">
+              <i class="fas fa-paper-plane"></i> Enviar
+            </button>
+            <button class="btn-copy" id="btnCopy">
+              <i class="fas fa-copy"></i> Copiar
+            </button>
+            <button class="btn-whatsapp" id="btnWhatsApp">
+              <i class="fab fa-whatsapp"></i> WhatsApp
+            </button>
+          </div>
+          
+          <button class="btn-clear" id="btnClear">
+            <i class="fas fa-broom"></i> Limpar Formulário
+          </button>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="app-header" style="background: linear-gradient(90deg, #8b5cf6 0%, #7c3aed 100%);">
+          <h2><i class="fas fa-info-circle"></i> Histórico de Carregamentos</h2>
+          <p>Últimos registros de carregamento</p>
+        </div>
+        
+        <div class="form-container">
+          <div class="input-group">
+            <h3 style="margin-bottom: 20px; color: var(--primary);">Registros Recentes</h3>
+            <div id="historicoCarregamentos" style="max-height: 400px; overflow-y: auto;">
+              <!-- Histórico será preenchido dinamicamente -->
+              <div class="no-history" style="text-align: center; padding: 30px; color: #94a3b8;">
+                <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                <p>Nenhum registro de carregamento encontrado</p>
+                <p style="margin-top: 10px; font-size: 0.9rem;">Os registros aparecerão aqui após o envio</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <footer>
+      <p>Sistema idealizado e desenvolvido por Andrei Marsal - 9050 | &copy; 2023 Todos os direitos reservados</p>
+      <p style="margin-top: 10px; font-size: 0.8rem; color: #64748b;">Sistema de registro e relatórios de carregamentos</p>
+    </footer>
+  </div>
+  
+  <!-- Modal de Relatório -->
+  <div class="modal" id="reportModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-file-alt"></i> Relatório de Carregamento</h3>
+        <button class="modal-close" id="closeReportModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="turno-selector">
+          <div class="turno-btn active" data-turno="TURNO A">TURNO A</div>
+          <div class="turno-btn" data-turno="TURNO B">TURNO B</div>
+          <div class="turno-btn" data-turno="TURNO C">TURNO C</div>
+        </div>
+        
+        <div class="report-container">
+          <div class="report-title">
+      
